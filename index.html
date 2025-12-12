@@ -53,12 +53,17 @@
         }
     </style>
 </head>
-<body onload="checkPrank()">
+<body onload="checkSite()">
 <h1>Divyanshu Will Search That</h1>
 <input type="text" id="userQuestion" placeholder="Type your Question...">
 <div class="buttons-area">
     <button onclick="googleIt()">Google Search</button>
     <button onclick="typeWriter()">I'm Feeling Lucky</button>
+</div>
+<div id="linkBoxArea" style="display: none; margin-top: 20px;">
+    <p>🔗 Here is your link:</p>
+    <input type="text" id="resultLink" readonly style="background-color: #f1f3f4; color: #555;">
+    <button onclick="copyToClipboard()">Copy</button>
 </div>
 <script>
     function googleIt() {
@@ -69,8 +74,26 @@
         let safeCargo = encodeURIComponent(questionText);
         let fullLink = cleanUrl + coupler + safeCargo;
         prompt("Copy this link and send it to your friend!", fullLink);
-    }
-let textToType = "How to make a website";
+        // Find the box and the input field
+    let container = document.getElementById("linkBoxArea");
+    let resultInput = document.getElementById("resultLink");
+    // Put the link inside the input field
+    resultInput.value = fullLink;
+    // Reveal the hidden container!
+    container.style.display = "block";
+}
+// Helper function for the Copy button
+function copyToClipboard() {
+    let resultInput = document.getElementById("resultLink");
+    // Select the text inside the box
+    resultInput.select();
+    resultInput.setSelectionRange(0, 99999); // For mobile phones
+    // Run the copy command
+    navigator.clipboard.writeText(resultInput.value);
+    // Visual feedback
+    alert("Copied to clipboard!"); 
+}
+let textToType = "How to make pizza";
 let index = 0;
 function typeWriter() {
         let questionBox = document.getElementById("userQuestion");
@@ -80,7 +103,7 @@ function typeWriter() {
         if (index < textToType.length) {
                setTimeout(typeWriter, 100); 
     }   else {
-        // WE ARE DONE TYPING!
+        // TYPING DONE!
         
         // 1. Wait 1 second so they can read it
         setTimeout(function() {
@@ -90,7 +113,7 @@ function typeWriter() {
         }, 1000);
     }
 }
-function checkPrank() {
+function checkSite() {
     if (window.location.search != "") {
         let params = new URLSearchParams(window.location.search);
         let secretMessage = params.get("q");
@@ -102,3 +125,4 @@ function checkPrank() {
 </body>
 
 </html>
+
