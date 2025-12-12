@@ -4,30 +4,62 @@
 <title>My First Web Page</title>
     <style>
         body {
-            text-align: center; /* Center everything */
-            font-family: sans-serif; /* Make it look modern */
-            padding-top: 100px; /* Push it down from the top */
+            font-family: Arial, sans-serif; /* Web font */
+            text-align: center;
+            padding-top: 15%; /* Vertically center it more */
         }
-        
+
+        h1 {
+            font-size: 50px;
+            margin-bottom: 30px;
+        }
+
+        /* The Search Bar */
         input {
-            padding: 10px;
-            width: 300px;
-            border-radius: 20px; /* Round corners like Google */
-            border: 1px solid #dfe1e5;
+            width: 500px;
+            padding: 15px 20px; /* Bigger touch area */
+            border-radius: 24px; /* The "Pill" shape */
+            border: 1px solid #dfe1e5; /* Subtle gray border */
+            outline: none; /* Removes the ugly blue glow when clicked */
+            font-size: 16px;
         }
-        
+
+        /* Shadow when hovering over the box */
+        input:hover, input:focus {
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            border-color: rgba(223,225,229,0);
+        }
+
+        /* The Buttons container */
+        .buttons-area {
+            margin-top: 30px;
+        }
+
         button {
+            background-color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-family: arial, sans-serif;
+            font-size: 14px;
+            margin: 11px 4px;
             padding: 10px 20px;
-            margin-top: 20px;
             cursor: pointer;
+        }
+
+        button:hover {
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body onload="checkPrank()">
 <h1>Divyanshu Will Search That</h1>
 <input type="text" id="userQuestion" placeholder="Type your Question...">
-<button onclick="googleIt()">Search</button>
-<button onclick="typeWriter()">Auto Type</button>
+<div class="buttons-area">
+    <button onclick="googleIt()">Google Search</button>
+    <button onclick="typeWriter()">I'm Feeling Lucky</button>
+</div>
 <script>
     function googleIt() {
         let questionBox = document.getElementById("userQuestion");
@@ -68,4 +100,5 @@ function checkPrank() {
 }
 </script>
 </body>
+
 </html>
