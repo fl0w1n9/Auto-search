@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My First Web Page</title>
+    <style>
+        body {
+            text-align: center; /* Center everything */
+            font-family: sans-serif; /* Make it look modern */
+            padding-top: 100px; /* Push it down from the top */
+        }
+        
+        input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 20px; /* Round corners like Google */
+            border: 1px solid #dfe1e5;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body onload="checkPrank()">
+<h1>Divyanshu Will Search That</h1>
+<input type="text" id="userQuestion" placeholder="Type your Question...">
+<button onclick="googleIt()">Search</button>
+<button onclick="typeWriter()">Auto Type</button>
+<script>
+    function googleIt() {
+        let questionBox = document.getElementById("userQuestion");
+        let questionText = questionBox.value;
+        let cleanUrl = window.location.origin + window.location.pathname;
+        let coupler = "?q=";
+        let safeCargo = encodeURIComponent(questionText);
+        let fullLink = cleanUrl + coupler + safeCargo;
+        prompt("Copy this link and send it to your friend!", fullLink);
+    }
+let textToType = "How to make a website";
+let index = 0;
+function typeWriter() {
+        let questionBox = document.getElementById("userQuestion");
+        let currentLetter = textToType[index];
+        questionBox.value = questionBox.value + currentLetter;
+        index = index + 1;
+        if (index < textToType.length) {
+               setTimeout(typeWriter, 100); 
+    }   else {
+        // WE ARE DONE TYPING!
+        
+        // 1. Wait 1 second so they can read it
+        setTimeout(function() {
+             // 2. The Redirect! 
+             // Logic: Go to YouTube search results for the typed text
+             window.location.href = "https://www.youtube.com/results?search_query=" + encodeURIComponent(textToType);
+        }, 1000);
+    }
+}
+function checkPrank() {
+    if (window.location.search != "") {
+        let params = new URLSearchParams(window.location.search);
+        let secretMessage = params.get("q");
+        textToType = secretMessage;
+        typeWriter();
+    }
+}
+</script>
+</body>
+</html>
