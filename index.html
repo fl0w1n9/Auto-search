@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My First Web Page</title>
+<title>Savlon Bhoi ki Badmosi</title>
+    <link rel="icon" type="image/png" href="savlon.jpg">
     <style>
+#fakeMouse {
+    /* Smooth movement for position changes */
+    transition: top 1s ease-in-out, left 1s ease-in-out;
+}
         body {
             font-family: Arial, sans-serif; /* Web font */
             text-align: center;
@@ -51,13 +56,38 @@
             border: 1px solid #dadce0;
             box-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
+    /* The default "invisible" state */
+#introImage {
+    width: 200px;   /* Adjust size as needed */
+    opacity: 0;     /* 100% transparent */
+
+    /* Positioning to center it above everything */
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;   /* Ensure it sits on top of text */
+
+    /* Smoothly animate any changes to opacity over 0.5 seconds */
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* The "Active" state - add this class with JS */
+#introImage.fade-in-active {
+    opacity: 1; /* Fully visible */
+}
     </style>
 </head>
 <body onload="checkSite()">
+<div id="clickCurtain" onclick="startPlay()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+    <h2 style="font-family: Arial; color: #555;">(Click anywhere to start)</h2>
+</div>
+<img id="fakeMouse" src="cursor.png" style="position: absolute; width: 25px; z-index: 9999; display: none; pointer-events: none;">
+<img id="introImage" src="Yo.jpg" alt="Intro">
 <h1>Divyanshu Will Search That</h1>
 <input type="text" id="userQuestion" placeholder="Type your Question...">
 <div class="buttons-area">
-    <button onclick="googleIt()">Google Search</button>
+    <button id="searchBtn" onclick="googleIt()">Google Search</button>
     <button onclick="typeWriter()">I'm Feeling Lucky</button>
 </div>
 <div id="linkBoxArea" style="display: none; margin-top: 20px;">
@@ -96,33 +126,82 @@ function copyToClipboard() {
 let textToType = "How to make pizza";
 let index = 0;
 function typeWriter() {
-        let questionBox = document.getElementById("userQuestion");
-        let currentLetter = textToType[index];
-        questionBox.value = questionBox.value + currentLetter;
-        index = index + 1;
-        if (index < textToType.length) {
-               setTimeout(typeWriter, 100); 
-    }   else {
-        // TYPING DONE!
+    let questionBox = document.getElementById("userQuestion");
+    let currentLength = questionBox.value.length;
+
+    // 1. TYPING PHASE
+    if (index < textToType.length) {
+        questionBox.value += textToType.charAt(index);
+        index++;
+        setTimeout(typeWriter, 100); 
+    } 
+    // 2. MOUSE MOVEMENT PHASE (Typing is done!)
+    else {
+        // A. Reveal the mouse at a starting spot (e.g., bottom right)
+        let mouse = document.getElementById("fakeMouse");
+        mouse.style.display = "block";
+        mouse.style.top = "80%";  // Start near bottom
+        mouse.style.left = "80%"; // Start near right
         
-        // 1. Wait 1 second so they can read it
+        // B. Find the Target (The Search Button)
+        // We need to give your search button an ID first!
+        let button = document.getElementById("searchBtn");
+        
+        // This magic command gets the EXACT coordinates of the button
+        let rect = button.getBoundingClientRect();
+        
+        // C. Calculate center of button (left + half width, top + half height)
+        // We add 'window.scrollY' just in case the user scrolled down.
+        let targetLeft = rect.left + (rect.width / 2);
+        let targetTop = rect.top + (rect.height / 2) + window.scrollY;
+
+        // D. Move the mouse! (Wait 100ms to let it appear first)
         setTimeout(function() {
-             // 2. The Redirect! 
-             // Logic: Go to YouTube search results for the typed text
-             window.location.href = "https://www.youtube.com/results?search_query=" + encodeURIComponent(textToType);
-        }, 1000);
+            mouse.style.left = targetLeft + "px";
+            mouse.style.top = targetTop + "px";
+        }, 100);
+
+        // E. The Click & Redirect
+        setTimeout(function() {
+            // Play a click sound!
+            let clickSound = new Audio('mouse_click.mp3'); clickSound.play();
+            
+            window.location.href = "https://www.youtube.com/results?search_query=" + encodeURIComponent(textToType);
+        }, 1500); // Wait 1.5s for the mouse to arrive
+    }
+}function checkSite() {
+    // 1. The Gatekeeper
+    if (window.location.search != "") {
+        // Decode the message
+        let params = new URLSearchParams(window.location.search);
+        textToType = params.get("q");
+
+        // NOTE: We do NOT start the sound/animation here anymore.
+        // We just wait for the user to click the curtain.
+    } else {
+        // If nothing in search, hide the curtain immediately so you can use the search bar
+        document.getElementById("clickCurtain").style.display = "none";
     }
 }
-function checkSite() {
-    if (window.location.search != "") {
-        let params = new URLSearchParams(window.location.search);
-        let secretMessage = params.get("q");
-        textToType = secretMessage;
-        typeWriter();
-    }
+// 2. The New Trigger (Runs when user clicks the curtain)
+function startPlay() {
+    // Hide the curtain
+    document.getElementById("clickCurtain").style.display = "none";
+    // --- NOW we can play sound because the user CLICKED! ---
+    // Play Sound
+    let sound = new Audio('fahhhhh.mp3');
+    sound.play();
+    // Fade In Image
+    let img = document.getElementById('introImage');
+    img.classList.add('fade-in-active');
+    // Schedule Fade Out
+    setTimeout(function() {
+        img.classList.remove('fade-in-active');
+    }, 1500);
+    // Start Typing
+    setTimeout(typeWriter, 500);
 }
 </script>
 </body>
 
 </html>
-
